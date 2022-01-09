@@ -1,0 +1,44 @@
+{
+  "name": "blogi-lista",
+  "version": "0.0.1",
+  "description": "Tehtävä 4.1 -",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=test nodemon index.js",
+    "lint": "eslint .",
+    "test": "NODE_ENV=test jest --verbose --detectOpenHandles --runInBand --outputFile=./test.log"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pasiol/fso2020BlogiLista"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pasiol/fso2020BlogiLista/issues"
+  },
+  "homepage": "https://github.com/pasiol/fso2020BlogiLista#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
+    "mongoose": "^5.9.25",
+    "mongoose-unique-validator": "^2.0.3",
+    "morgan": "^1.10.0",
+    "react-scripts": "^3.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "jest": "^26.1.0",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
