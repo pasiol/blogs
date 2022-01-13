@@ -5,6 +5,7 @@ import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import BlogForm from './components/BlogForm';
+import Togglable from './components/Togglable';
 import './style.css';
 
 const App = () => {
@@ -14,7 +15,11 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [notification, setNotification] = useState('');
   const [notificationStyle, setNotificationStyle] = useState('');
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+  const [author, setAuthor] = useState('');
   const blogFormRef = useRef();
+
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
@@ -73,6 +78,8 @@ const App = () => {
       await blogService.create(blogObject);
       setBlogs(blogs.concat(blogObject));
       notify(`a new blog ${blogObject.title} added`, 'success');
+      const allBlogs = await blogService.getAsyncAll();
+      setBlogs(allBlogs);
       blogFormRef.current.toggleVisibility();
     } catch (error) {
       notify(`a new blog ${blogObject.title} cannot save: ${error}`, 'error');
@@ -92,17 +99,18 @@ const App = () => {
     }
   };
 
-  const removeBlog = async (blogObject) => {
+  const removeBlog = async (id) => {
+    console.log('removeBlog blogobject: ', id);
     try {
-      await blogService.remove(blogObject);
+      await blogService.remove(id);
       const updatedBlogs = await blogService.getAsyncAll();
       setBlogs(updatedBlogs);
       blogs.sort(function (a, b) {
         return b.likes - a.likes;
       });
-      notify(`removing ${blogObject.title} succesfully`, 'success');
+      notify(`removing ${id} succesfully`, 'success');
     } catch (error) {
-      notify(`deleting ${blogObject.title} failed: ${error}`, 'error');
+      notify(`deleting ${id} failed: ${error}`, 'error');
     }
   };
 
@@ -112,6 +120,24 @@ const App = () => {
     setUser(null);
     window.localStorage.removeItem('loggedBlogappUser');
     await blogService.getAll().then((blogs) => setBlogs(blogs));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (title.length > 0 && author.length > 0 && url.length > 0) {
+      await addBlog({
+        title: title,
+        author: author,
+        url: url,
+        likes: 0,
+      });
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+    } else {
+      notify('missing information, can not save the blog', 'error');
+    }
+
   };
 
   const addVote = async (blog) => {
@@ -136,12 +162,20 @@ const App = () => {
         handleLogin={handleLogin}
         handleLogout={handleLogout}
       />
-      <BlogForm
-        user={user}
-        createBlog={addBlog}
-        nofify={notify}
-        blogFormRef={blogFormRef}
-      />
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <h2>create new</h2>
+        <BlogForm
+          user={user}
+          handleSubmit={handleSubmit}
+          title={title}
+          setTitle={setTitle}
+          url={url}
+          setUrl={setUrl}
+          author={author}
+          setAuthor={setAuthor}
+          blogFormRef={blogFormRef}
+        />
+      </Togglable>
       <h2>blogs</h2>
       {blogs.map((blog) => (
         <Blog

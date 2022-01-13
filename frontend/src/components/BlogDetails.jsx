@@ -9,32 +9,6 @@ const BlogDetails = (props) => {
 
   console.log('BlogDetails props: ', props);
 
-  /*const addVote = async (event) => {
-    event.preventDefault();
-    props.updateBlog({
-      id: props.blog.id,
-      title: props.blog.title,
-      author: props.blog.author,
-      url: props.blog.url,
-      likes: ++props.blog.likes,
-    });
-  };*/
-
-  const deleteBlog = async (event) => {
-    event.preventDefault();
-    if (
-      window.confirm(`Remove blog ${props.blog.title} by ${props.blog.author}`)
-    ) {
-      props.removeBlog({
-        id: props.blog.id,
-        title: props.blog.title,
-        author: props.blog.author,
-        url: props.blog.url,
-        likes: props.blog.likes,
-      });
-    }
-  };
-
   return (
     <>
       {visible && (
@@ -58,8 +32,9 @@ const BlogDetails = (props) => {
           {props.blog.author}
           <br />
           <DeleteButton
-            deleteBlog={deleteBlog}
+            removeBlog={props.removeBlog}
             username={props.blog.user.username}
+            id={props.blog.id}
           />
         </div>
       )}
